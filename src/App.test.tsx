@@ -78,7 +78,7 @@ describe('interfaz', () => {
     expect(text()).toMatch(/Racha×1/);
   });
 
-  it('modo opciones: cuatro alternativas y respuesta con un clic', () => {
+  it('modo alternativas: cuatro opciones y respuesta con un clic', () => {
     setCfg({ level: 3, mode: 'survival', types: ['f2n'], nomens: ['trad'], mc: true });
     render(<App />);
     fireEvent.click(screen.getByRole('button', { name: 'Jugar' }));

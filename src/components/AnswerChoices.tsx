@@ -11,7 +11,7 @@ interface Props {
 
 export function AnswerChoices({ q, locked, selected, onPick }: Props) {
   return (
-    <div className="mc" role="group" aria-label="Opciones">
+    <div className="mc" role="group" aria-label="Alternativas">
       {(q.options ?? []).map((o, i) => {
         let cls = q.type === 'f2n' ? ' name' : '';
         if (locked) {

@@ -115,7 +115,7 @@ export function Home({ cfg, onCfg, best, errCount, onStart, onReview, onNav, ach
           <h2>Respuesta</h2>
           <div className="seg" role="radiogroup" aria-label="Forma de responder">
             <Choice radio title="Escribir" selected={!cfg.mc} onClick={() => onCfg({ ...cfg, mc: false })} />
-            <Choice radio title="Opciones" selected={cfg.mc} onClick={() => onCfg({ ...cfg, mc: true })} />
+            <Choice radio title="Alternativas" selected={cfg.mc} onClick={() => onCfg({ ...cfg, mc: true })} />
           </div>
         </section>
         <ThemePicker theme={theme} onTheme={onTheme} />

@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import {
-  ALL_PAIRS, checkFormula, checkName, genQuestion, lsGet, lsSet, poolFor, scoreOf
+  ALL_PAIRS, checkFormula, checkName, genQuestion, lsDel, lsGet, lsSet, poolFor, scoreOf
 } from '../lib';
 import type { AnswerEvent, Config, FormulaResult, GameEvent, Mode, NameResult, Nomen, Pair, QType, Question, ScoreBreakdown } from '../lib';
 
@@ -188,6 +188,15 @@ export function useGame(callbacks: GameCallbacks = {}) {
     const r = runRef.current;
     start(cfg, !!r?.review);
   };
+  /** Borra récords y errores por repasar del dispositivo */
+  const resetAll = () => {
+    bestRef.current = {};
+    errsRef.current = [];
+    setBest({});
+    setErrs([]);
+    lsDel('sn:best');
+    lsDel('sn:err');
+  };
 
-  return { run, best, errs, start, submit, next, hint, setCount, tick, quit, again, data, replaceData };
+  return { run, best, errs, start, submit, next, hint, setCount, tick, quit, again, data, replaceData, resetAll };
 }

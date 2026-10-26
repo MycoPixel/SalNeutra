@@ -7,15 +7,18 @@ interface Props {
   /** Devuelve el respaldo como texto JSON (con sangría o compacto) */
   onExport: (pretty: boolean) => string;
   onImport: (text: string) => ImportResult;
+  /** Borra récords, errores, estadísticas y logros del dispositivo */
+  onReset: () => void;
   onBack: () => void;
 }
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
-export function Backup({ onExport, onImport, onBack }: Props) {
+export function Backup({ onExport, onImport, onReset, onBack }: Props) {
   const [msg, setMsg] = useState<{ kind: 'ok' | 'bad'; text: string } | null>(null);
   const [pasted, setPasted] = useState('');
   const [manual, setManual] = useState('');
+  const [confirmReset, setConfirmReset] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const download = () => {
@@ -69,6 +72,14 @@ export function Backup({ onExport, onImport, onBack }: Props) {
     }
   };
 
+  const reset = () => {
+    onReset();
+    setConfirmReset(false);
+    setPasted('');
+    setManual('');
+    setMsg({ kind: 'ok', text: 'Se borró todo el avance de este dispositivo.' });
+  };
+
   return (
     <div className="iontable backup">
       <header className="tablehead">
@@ -107,6 +118,24 @@ export function Backup({ onExport, onImport, onBack }: Props) {
         <div className="btnrow">
           <button type="button" className="btn primary" disabled={!pasted.trim()} onClick={() => run(pasted)}>Importar código</button>
         </div>
+      </section>
+
+      <section className="panel danger">
+        <h2>Borrar todo el avance</h2>
+        <p className="hint">Elimina los récords, los errores por repasar, las estadísticas y los logros guardados en este dispositivo. La configuración del juego y el tema se conservan.</p>
+        {!confirmReset ? (
+          <div className="btnrow">
+            <button type="button" className="btn danger" onClick={() => { setConfirmReset(true); setMsg(null); }}>Borrar todo el avance</button>
+          </div>
+        ) : (
+          <>
+            <p className="note bad" role="alert"><b>¿Seguro?</b> Esta acción no se puede deshacer. Si no tienes un respaldo, no podrás recuperar el avance.</p>
+            <div className="btnrow">
+              <button type="button" className="btn danger solid" onClick={reset}>Sí, borrar todo</button>
+              <button type="button" className="btn" autoFocus onClick={() => setConfirmReset(false)}>Cancelar</button>
+            </div>
+          </>
+        )}
       </section>
 
       <div aria-live="polite">{msg && <p className={`note ${msg.kind}`}>{msg.text}</p>}</div>

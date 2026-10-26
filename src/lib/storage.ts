@@ -15,3 +15,11 @@ export function lsSet(key: string, value: unknown): void {
     /* sin almacenamiento: se ignora */
   }
 }
+
+export function lsDel(key: string): void {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    /* sin almacenamiento: se ignora */
+  }
+}

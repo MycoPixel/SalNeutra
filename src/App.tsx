@@ -54,6 +54,10 @@ export default function App() {
     progress.replaceAll({ stats: data.stats, ach: data.ach, achOn: data.achOn });
     return { ok: true as const, report };
   };
+  const resetProgress = () => {
+    game.resetAll();
+    progress.resetAll();
+  };
 
   const done = ACHIEVEMENTS.filter(a => progress.unlocked[a.id]).length;
   const back = () => go('home');
@@ -63,7 +67,7 @@ export default function App() {
       {!run && view === 'ach' && (
         <Achievements enabled={progress.enabled} onToggle={progress.setEnabled} unlocked={progress.unlocked} stats={progress.stats} onBack={back} />
       )}
-      {!run && view === 'backup' && <Backup onExport={exportJson} onImport={importText} onBack={back} />}
+      {!run && view === 'backup' && <Backup onExport={exportJson} onImport={importText} onReset={resetProgress} onBack={back} />}
       {!run && view === 'home' && (
         <Home
           cfg={cfg} onCfg={setCfg} best={game.best} errCount={game.errs.length} achLabel={progress.enabled ? `${done}/${ACHIEVEMENTS.length}` : ''}

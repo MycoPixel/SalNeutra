@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import {
-  ACHIEVEMENTS, TIER_LABEL, lsGet, lsSet, newlyUnlocked, recordAnswer, recordExport, recordGame, recordTable, sanitizeAch, sanitizeStats
+  ACHIEVEMENTS, TIER_LABEL, emptyStats, lsDel, lsGet, lsSet, newlyUnlocked, recordAnswer, recordExport, recordGame, recordTable, sanitizeAch, sanitizeStats
 } from '../lib';
 import type { AnswerEvent, GameEvent, Stats, Tier } from '../lib';
 
@@ -85,8 +85,20 @@ export function useProgress() {
     apply(d.stats, true);
   };
 
+  /** Borra estadísticas y logros desbloqueados; conserva la preferencia de logros */
+  const resetAll = () => {
+    const fresh = emptyStats();
+    statsRef.current = fresh;
+    setStats(fresh);
+    unlockedRef.current = {};
+    setUnlocked({});
+    setToasts([]);
+    lsDel('sn:stats');
+    lsDel('sn:ach');
+  };
+
   return {
-    stats, unlocked, enabled, toasts, dismissToast, setEnabled, replaceAll,
+    stats, unlocked, enabled, toasts, dismissToast, setEnabled, replaceAll, resetAll,
     onAnswer: (e: AnswerEvent) => apply(recordAnswer(statsRef.current, e)),
     onFinish: (e: GameEvent) => apply(recordGame(statsRef.current, e)),
     markTable: () => apply(recordTable(statsRef.current)),

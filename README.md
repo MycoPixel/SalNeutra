@@ -83,6 +83,8 @@ Para agregar un logro:
 
 La pantalla **Copia de progreso** exporta e importa récords, errores por repasar, estadísticas y logros, para pasar de un dispositivo a otro. Se puede usar un archivo `.json` o un código de texto para copiar y pegar. La configuración del juego no se incluye.
 
+La misma pantalla permite **borrar todo el avance** del dispositivo. Pide confirmación con una advertencia y elimina récords, errores, estadísticas y logros; la configuración del juego y el tema se conservan.
+
 Al importar se combina con lo que ya hay: se conserva el mejor valor de cada récord y de cada contador, se juntan los errores y los logros, y no se borra nada. Importar el mismo respaldo dos veces no duplica nada.
 
 El formato lleva `app: "sal-neutra"` y `v: 1`. Si cambia, sube `SNAPSHOT_VERSION` en `src/lib/progress.ts` y migra los respaldos antiguos en `parseSnapshot`.

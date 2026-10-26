@@ -188,6 +188,30 @@ describe('interfaz', () => {
     expect(localStorage.getItem('sn:best')).toBeNull();
   });
 
+  it('borrar avance: advierte, permite cancelar y solo borra al confirmar', () => {
+    localStorage.setItem('sn:best', JSON.stringify({ classic: 123 }));
+    localStorage.setItem('sn:err', JSON.stringify(['Na1|Cl']));
+    localStorage.setItem('sn:stats', JSON.stringify({ answered: 5 }));
+    localStorage.setItem('sn:ach', JSON.stringify({ primer_enlace: '2026-01-01T00:00:00.000Z' }));
+    localStorage.setItem('sn:achOn', 'true');
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Copia de progreso' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Borrar todo el avance' }));
+    expect(text()).toContain('Esta acción no se puede deshacer');
+    fireEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
+    expect(text()).not.toContain('Esta acción no se puede deshacer');
+    expect(localStorage.getItem('sn:best')).not.toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Borrar todo el avance' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Sí, borrar todo' }));
+    for (const key of ['sn:best', 'sn:err', 'sn:stats', 'sn:ach']) expect(localStorage.getItem(key)).toBeNull();
+    expect(localStorage.getItem('sn:achOn')).toBe('true');
+    expect(text()).toContain('Se borró todo el avance');
+    fireEvent.click(screen.getByRole('button', { name: '← Volver' }));
+    expect(text()).not.toMatch(/Repasar errores/);
+    expect(text()).toContain('Clásico —');
+  });
+
   it('copia de progreso: exportar sin portapapeles muestra el código y se puede volver a importar', async () => {
     Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.reject(new Error('denegado')) }, configurable: true });
     localStorage.setItem('sn:best', JSON.stringify({ time: 321 }));

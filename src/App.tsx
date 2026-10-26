@@ -9,6 +9,7 @@ import { Toasts } from './components/Toasts';
 import { DEFAULT_CONFIG } from './constants';
 import { useGame } from './hooks/useGame';
 import { useProgress } from './hooks/useProgress';
+import { useTheme } from './hooks/useTheme';
 import { ACHIEVEMENTS, buildSnapshot, lsGet, lsSet, mergeData, parseSnapshot } from './lib';
 import type { Config, LocalData } from './lib';
 
@@ -27,6 +28,7 @@ export default function App() {
   const [view, setView] = useState<View>('home');
   const progress = useProgress();
   const game = useGame({ onAnswer: progress.onAnswer, onFinish: progress.onFinish });
+  const { theme, setTheme } = useTheme();
   const { run } = game;
 
   const setCfg = (next: Config) => {
@@ -65,6 +67,7 @@ export default function App() {
       {!run && view === 'home' && (
         <Home
           cfg={cfg} onCfg={setCfg} best={game.best} errCount={game.errs.length} achLabel={progress.enabled ? `${done}/${ACHIEVEMENTS.length}` : ''}
+          theme={theme} onTheme={setTheme}
           onStart={() => game.start(cfg, false)} onReview={() => game.start(cfg, true)} onNav={go}
         />
       )}

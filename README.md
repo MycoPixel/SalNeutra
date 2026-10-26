@@ -2,7 +2,7 @@
 
 Juego de nomenclatura inorgánica en español de Chile. Se nombran compuestos a partir de la fórmula, se escriben fórmulas a partir del nombre y se calcula cuántos cationes y aniones forman la sal neutra. Admite nomenclatura Stock, sistemática y tradicional, tres modos de juego (Clásico, Contrarreloj y Supervivencia) y cinco niveles.
 
-Hecho con Vite, React y TypeScript. Funciona en celular y en pantallas grandes.
+Hecho con Vite, React y TypeScript. Funciona en celular y en pantallas grandes. Tiene temas claro, oscuro y variantes de color, y se distribuye bajo licencia MIT.
 
 ## Comandos
 
@@ -28,14 +28,37 @@ src/
 │   ├── achievements.ts  Lista de logros, avance y desbloqueo
 │   ├── progress.ts    Respaldo: crear, leer, validar y combinar
 │   ├── questions.ts   Generador de preguntas y opciones de selección múltiple
+│   ├── theme.ts       Temas, colores de muestra y persistencia
 │   └── storage.ts     localStorage tolerante a fallos
 ├── hooks/useGame.ts   Estado de la partida (puntaje, vidas, tiempo, errores)
 ├── hooks/useProgress.ts  Estadísticas, logros y avisos
-├── components/        Home, Game, Results, IonTable, Achievements, Backup y los tipos de respuesta
+├── hooks/useTheme.ts  Tema activo y cambio automático del sistema
+├── components/        Home, Game, Results, IonTable, Achievements, Backup, ThemePicker y los tipos de respuesta
 ├── constants.ts       Textos de modos, tipos, nomenclaturas y reglas
-├── styles.css         Estilos con tema claro y oscuro
+├── styles.css         Estilos y paletas de los temas
 └── *.test.ts(x)       Pruebas
 ```
+
+## Temas
+
+El selector **Tema** del inicio guarda la elección en el navegador y la aplica antes del primer pintado para que no haya destellos. Las opciones son:
+
+| Tema | Apariencia |
+| --- | --- |
+| Sistema | Claro u oscuro según el dispositivo |
+| Claro / Oscuro | La paleta clásica de laboratorio |
+| Océano | Azul profundo con cian |
+| Bosque | Verde de invernadero |
+| Atardecer | Malva cálido y durazno |
+| Lavanda | Lila claro |
+| Arena | Papel cálido y terracota |
+
+Cada tema define las variables CSS de `:root`: fondos, texto, bordes y los colores de cationes, aniones, aciertos y errores. Para agregar uno:
+
+1. Añade el identificador a `ThemeId` y una entrada a `THEMES` en `src/lib/theme.ts` (nombre, ayuda y colores de la muestra).
+2. Agrega el bloque `:root[data-theme="tu-tema"]` en `src/styles.css` con todas las variables y su `color-scheme`.
+3. Suma el color de fondo al mapa de `index.html` para la barra del navegador.
+4. `src/App.test.tsx` revisa que el tema se aplique y se recuerde; `npm test` avisa si algo queda mal.
 
 ## Dónde agregar cosas
 
@@ -64,7 +87,11 @@ Al importar se combina con lo que ya hay: se conserva el mejor valor de cada ré
 
 El formato lleva `app: "sal-neutra"` y `v: 1`. Si cambia, sube `SNAPSHOT_VERSION` en `src/lib/progress.ts` y migra los respaldos antiguos en `parseSnapshot`.
 
-Claves de `localStorage`: `sn:cfg`, `sn:best`, `sn:err`, `sn:stats`, `sn:ach` y `sn:achOn`.
+Claves de `localStorage`: `sn:cfg`, `sn:best`, `sn:err`, `sn:stats`, `sn:ach`, `sn:achOn` y `sn:theme`.
+
+## Licencia
+
+[MIT](LICENSE) © 2026 MycoPixel. Puedes usar, modificar y compartir el proyecto citando el aviso de copyright.
 
 ## Subir a GitHub
 
@@ -73,11 +100,11 @@ git init
 git add .
 git commit -m "Sal Neutra: versión inicial"
 git branch -M main
-git remote add origin https://github.com/Babobebo/sal-neutra.git
+git remote add origin https://github.com/MycoPixel/SalNeutra.git
 git push -u origin main
 ```
 
-Antes, crea el repositorio vacío `sal-neutra` en GitHub (sin README ni .gitignore, que ya vienen en el proyecto).
+Antes, crea el repositorio vacío `SalNeutra` en GitHub (sin README ni .gitignore, que ya vienen en el proyecto).
 
 ## Publicar en Vercel
 

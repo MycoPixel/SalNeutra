@@ -10,3 +10,4 @@ export * from './math';
 export * from './stats';
 export * from './achievements';
 export * from './progress';
+export * from './theme';

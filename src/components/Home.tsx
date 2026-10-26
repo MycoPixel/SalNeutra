@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
 import { MODES, MODE_IDS, NOMENS, NOMEN_DESC, NOMEN_IDS, TYPES, TYPE_DESC, TYPE_IDS } from '../constants';
 import { ALL_PAIRS, LEVELS, LEVEL_IDS, counts, formulasOf } from '../lib';
-import type { Config, Nomen, QType } from '../lib';
+import type { Config, Nomen, QType, ThemeId } from '../lib';
 import { Formula, Ion } from './Formula';
+import { ThemePicker } from './ThemePicker';
 
 interface ChoiceProps {
   selected: boolean;
@@ -56,9 +57,11 @@ interface Props {
   onNav: (view: 'table' | 'ach' | 'backup') => void;
   /** texto corto junto a «Logros», ej. «3/27»; vacío si están desactivados */
   achLabel: string;
+  theme: ThemeId;
+  onTheme: (id: ThemeId) => void;
 }
 
-export function Home({ cfg, onCfg, best, errCount, onStart, onReview, onNav, achLabel }: Props) {
+export function Home({ cfg, onCfg, best, errCount, onStart, onReview, onNav, achLabel, theme, onTheme }: Props) {
   const rec = (m: string) => <b>{best[m] ?? '—'}</b>;
   return (
     <div className="home">
@@ -115,6 +118,7 @@ export function Home({ cfg, onCfg, best, errCount, onStart, onReview, onNav, ach
             <Choice radio title="Opciones" selected={cfg.mc} onClick={() => onCfg({ ...cfg, mc: true })} />
           </div>
         </section>
+        <ThemePicker theme={theme} onTheme={onTheme} />
       </div>
     </div>
   );

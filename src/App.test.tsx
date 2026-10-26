@@ -12,9 +12,33 @@ beforeEach(() => {
   window.matchMedia = window.matchMedia ?? (((q: string) => ({ matches: false, media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia);
   window.scrollTo = (() => {}) as typeof window.scrollTo;
 });
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  document.documentElement.removeAttribute('data-theme');
+  document.querySelector('meta[name="theme-color"]')?.remove();
+});
 
 describe('interfaz', () => {
+  it('tema: cambia el atributo del documento, la barra del navegador y se recuerda', () => {
+    const meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    document.head.appendChild(meta);
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Océano' }));
+    expect(document.documentElement.getAttribute('data-theme')).toBe('ocean');
+    expect(localStorage.getItem('sn:theme')).toBe('"ocean"');
+    expect(meta.getAttribute('content')).toBe('#071820');
+    fireEvent.click(screen.getByRole('button', { name: 'Sistema' }));
+    expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
+    expect(localStorage.getItem('sn:theme')).toBe('"auto"');
+  });
+
+  it('tema: recuerda la elección al volver a abrir la app', () => {
+    localStorage.setItem('sn:theme', '"lavender"');
+    render(<App />);
+    expect(document.documentElement.getAttribute('data-theme')).toBe('lavender');
+    expect(screen.getByRole('button', { name: 'Lavanda' }).getAttribute('aria-pressed')).toBe('true');
+  });
   it('muestra el inicio y completa una partida clásica de 10 preguntas', () => {
     render(<App />);
     expect(screen.getByRole('heading', { name: 'Sal Neutra' })).toBeTruthy();

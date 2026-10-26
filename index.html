@@ -6,6 +6,19 @@
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ecf2f3" />
     <title>Sal Neutra</title>
+    <script>
+      // Aplica el tema guardado antes del primer pintado para evitar el destello de otro color.
+      (function () {
+        var bg = { light: '#ecf2f3', dark: '#0c1a1f', ocean: '#071820', forest: '#0a1710', sunset: '#1a0e18', lavender: '#f3effb', sand: '#f7f1e4' };
+        var t = 'auto';
+        try { t = JSON.parse(localStorage.getItem('sn:theme') || '"auto"'); } catch (e) { /* sin almacenamiento */ }
+        if (!bg[t]) t = 'auto';
+        if (t !== 'auto') document.documentElement.setAttribute('data-theme', t);
+        var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', bg[t === 'auto' ? (dark ? 'dark' : 'light') : t]);
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" />
